@@ -1,0 +1,7 @@
+inherit_gem:
+  salsify_rubocop: conf/rubocop.yml
+
+Style/FileName:
+  Exclude:
+    - 'lib/avro_schema_registry-client.rb'
+    - 'spec/avro_schema_registry-client_spec.rb'
