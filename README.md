@@ -1,11 +1,11 @@
 # AvroSchemaRegistry::Client
 
-Welcome to your new gem! In this directory, you'll find the files you need to be
-able to package up your Ruby library into a gem. Put your Ruby code in the file
-`lib/avro_schema_registry-client`. To experiment with that code, run 
-`bin/console` for an interactive prompt.
+Client for the [avro-schema-registry](https://github.com/salsify/avro-schema-registry)
+app.
 
-TODO: Delete this and the text above, and describe your gem
+This client extends [AvroTurf::ConfluentSchemaRegistry](https://github.com/dasch/avro_turf)
+to support [extensions](https://github.com/salsify/avro-schema-registry#extensions)
+provided by avro-schema-registry
 
 ## Installation
 
@@ -25,7 +25,36 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Create a client:
+
+```ruby
+client = AvroSchemaRegistry::Client.new(registry_url, logger: logger)
+```
+
+Create a client that caches the responses for requests to fetch or register
+an `Avro::Schema`:
+
+```ruby
+cached_client = AvroSchemaRegistry::CachedClient.new(
+  AvroSchemaRegistry::Client.new(registry_url, logger: logger)
+)
+```
+
+### Fake Server
+
+This gem also provides a fake avro-schema-registry server that can be used in
+tests. This fake server depends on sinatra, which must be explicitly added
+as a dependency:
+
+```ruby
+require 'avro_schema_registry/test/fake_server'
+
+# before hook with rspec
+before do
+  WebMock.stub_request(:any, /^#{registry_url}/).to_rack(AvroSchemaRegistry::FakeServer)
+  AvroSchemaRegistry::FakeServer.clear
+end
+```
 
 ## Development
 
@@ -38,8 +67,7 @@ To install this gem onto your local machine, run `bundle exec rake install`.
 To release a new version, update the version number in `version.rb`, and then
 run `bundle exec rake release`, which will create a git tag for the version,
 push git commits and tags, and push the `.gem` file to
-[rubygems.org](https://rubygems.org)
-.
+[rubygems.org](https://rubygems.org).
 
 ## Contributing
 
