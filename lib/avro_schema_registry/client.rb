@@ -21,15 +21,17 @@ module AvroSchemaRegistry
     # Override register to first check if a schema is registered by fingerprint
     # Also, allow additional params to be passed to register.
     def register(subject, schema, **params)
-
       lookup_subject_schema(subject, schema)
     rescue Excon::Errors::NotFound
+      register_without_lookup(subject, schema, params)
+    end
+
+    def register_without_lookup(subject, schema, **params)
       data = post("/subjects/#{subject}/versions",
                   body: { schema: schema.to_s }.merge!(params).to_json)
       id = data.fetch('id')
       @logger.info("Registered schema for subject `#{subject}`; id = #{id}")
       id
-
     end
 
     # Override to add support for additional params
