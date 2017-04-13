@@ -34,11 +34,6 @@ module AvroSchemaRegistry
       id
     end
 
-    def register_and_lookup(subject, schema, **params)
-      register_without_lookup(subject, schema, params)
-      lookup_subject_schema(subject, schema)
-    end
-
     # Override to add support for additional params
     def compatible?(subject, schema, version = 'latest', **params)
       data = post("/compatibility/subjects/#{subject}/versions/#{version}",

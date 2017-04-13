@@ -83,30 +83,6 @@ describe AvroSchemaRegistry::Client do
     end
   end
 
-  describe "#register_and_lookup" do
-    it "allows registration of an Avro JSON schema" do
-      id = registry.register_and_lookup(subject_name, schema)
-      expect(registry.fetch(id)).to eq(avro_schema.to_s)
-    end
-
-    it "allows the registration of an Avro::Schema" do
-      id = registry.register_and_lookup(subject_name, avro_schema)
-      expect(registry.fetch(id)).to eq(avro_schema.to_s)
-    end
-
-    it "makes a request to check if the schema exists after attempting to register" do
-      allow(registry).to receive(:get).and_call_original
-      registry.register_and_lookup(subject_name, avro_schema)
-      expect(registry).to have_received(:get)
-    end
-
-    it "allows compatibility parameters to be specified" do
-      id = registry.register_and_lookup(subject_name, avro_schema,
-                                        with_compatibility: 'NONE', after_compatibility: 'FULL')
-      expect(registry.fetch(id)).to eq(avro_schema.to_s)
-    end
-  end
-
   describe "#lookup_subject_schema" do
     context "when the schema does not exist" do
       it "raises an error" do
