@@ -1,6 +1,6 @@
 # avro_schema_registry-client
 
-## v0.4.0 (Unreleased)
+## v0.4.0
 - Require Ruby 2.5+.
 - Add support for Ruby 3.0.
 
