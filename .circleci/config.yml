@@ -26,8 +26,11 @@ jobs:
           name: Run Rubocop
           command: bundle exec rubocop
   test:
+    parameters:
+      ruby_version:
+        type: string
     docker:
-      - image: salsify/ruby_ci:2.5.8
+      - image: salsify/ruby_ci:<< parameters.ruby_version >>
     environment:
       CIRCLE_TEST_REPORTS: "test-results"
     working_directory: ~/avro_schema_registry-client
@@ -35,8 +38,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-gems-ruby-2.5.8-{{ checksum "avro_schema_registry-client.gemspec" }}-{{ checksum "Gemfile" }}
-            - v1-gems-ruby-2.5.8-
+            - v1-gems-ruby-<< parameters.ruby_version >>-{{ checksum "avro_schema_registry-client.gemspec" }}-{{ checksum "Gemfile" }}
+            - v1-gems-ruby-<< parameters.ruby_version >>-
       - run:
           name: Install Gems
           command: |
@@ -45,7 +48,7 @@ jobs:
               bundle clean
             fi
       - save_cache:
-          key: v1-gems-ruby-2.5.8-{{ checksum "avro_schema_registry-client.gemspec" }}-{{ checksum "Gemfile" }}
+          key: v1-gems-ruby-<< parameters.ruby_version >>-{{ checksum "avro_schema_registry-client.gemspec" }}-{{ checksum "Gemfile" }}
           paths:
             - "vendor/bundle"
             - "gemfiles/vendor/bundle"
@@ -59,4 +62,9 @@ workflows:
   build:
     jobs:
       - lint
-      - test
+      - test:
+          matrix:
+            parameters:
+              ruby_version:
+                - "2.5.8"
+                - "3.0.0"

@@ -2,6 +2,7 @@
 
 ## v0.4.0 (Unreleased)
 - Require Ruby 2.5+.
+- Add support for Ruby 3.0.
 
 ## v0.3.0
 - Require `avro-resolution_canonical_form` v0.2.0 or later to use
