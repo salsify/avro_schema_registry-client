@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'avro_turf'
 require 'avro_turf/confluent_schema_registry'
 require 'avro-resolution_canonical_form'
