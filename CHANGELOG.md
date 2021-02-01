@@ -1,5 +1,8 @@
 # avro_schema_registry-client
 
+## v0.4.0 (Unreleased)
+- Require Ruby 2.5+.
+
 ## v0.3.0
 - Require `avro-resolution_canonical_form` v0.2.0 or later to use
   `avro-patches`.

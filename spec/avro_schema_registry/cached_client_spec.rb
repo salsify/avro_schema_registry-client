@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe AvroSchemaRegistry::CachedClient do
   let(:upstream) { instance_double(AvroSchemaRegistry::Client) }
 
