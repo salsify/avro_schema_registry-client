@@ -1,0 +1,62 @@
+version: 2.1
+jobs:
+  lint:
+    docker:
+      - image: salsify/ruby_ci:2.5.8
+    working_directory: ~/avro_schema_registry-client
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-gems-ruby-2.5.8-{{ checksum "avro_schema_registry-client.gemspec" }}-{{ checksum "Gemfile" }}
+            - v1-gems-ruby-2.5.8-
+      - run:
+          name: Install Gems
+          command: |
+            if ! bundle check --path=vendor/bundle; then
+              bundle install --path=vendor/bundle --jobs=4 --retry=3
+              bundle clean
+            fi
+      - save_cache:
+          key: v1-gems-ruby-2.5.8-{{ checksum "avro_schema_registry-client.gemspec" }}-{{ checksum "Gemfile" }}
+          paths:
+            - "vendor/bundle"
+            - "gemfiles/vendor/bundle"
+      - run:
+          name: Run Rubocop
+          command: bundle exec rubocop
+  test:
+    docker:
+      - image: salsify/ruby_ci:2.5.8
+    environment:
+      CIRCLE_TEST_REPORTS: "test-results"
+    working_directory: ~/avro_schema_registry-client
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-gems-ruby-2.5.8-{{ checksum "avro_schema_registry-client.gemspec" }}-{{ checksum "Gemfile" }}
+            - v1-gems-ruby-2.5.8-
+      - run:
+          name: Install Gems
+          command: |
+            if ! bundle check --path=vendor/bundle; then
+              bundle install --path=vendor/bundle --jobs=4 --retry=3
+              bundle clean
+            fi
+      - save_cache:
+          key: v1-gems-ruby-2.5.8-{{ checksum "avro_schema_registry-client.gemspec" }}-{{ checksum "Gemfile" }}
+          paths:
+            - "vendor/bundle"
+            - "gemfiles/vendor/bundle"
+      - run:
+          name: Run Tests
+          command: |
+            bundle exec rspec --format RspecJunitFormatter --out $CIRCLE_TEST_REPORTS/rspec/junit.xml --format progress spec
+      - store_test_results:
+          path: "test-results"
+workflows:
+  build:
+    jobs:
+      - lint
+      - test
