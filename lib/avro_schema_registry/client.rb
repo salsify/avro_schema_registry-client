@@ -25,7 +25,7 @@ module AvroSchemaRegistry
     def register(subject, schema, **params)
       lookup_subject_schema(subject, schema)
     rescue Excon::Errors::NotFound
-      register_without_lookup(subject, schema, params)
+      register_without_lookup(subject, schema, **params)
     end
 
     def register_without_lookup(subject, schema, **params)
