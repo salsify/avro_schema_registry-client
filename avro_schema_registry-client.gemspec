@@ -39,9 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'salsify_rubocop', '~> 1.27.1'
   spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'webmock'
-  # For AvroSchemaRegistry::FakeServer
-  spec.add_development_dependency 'sinatra'
 
   spec.add_runtime_dependency 'avro-resolution_canonical_form', '>= 0.2.0'
-  spec.add_runtime_dependency 'avro_turf', '>= 0.8.0'
+  spec.add_runtime_dependency 'avro_turf', '>= 1.20.1'
 end

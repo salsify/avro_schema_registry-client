@@ -1,5 +1,9 @@
 # avro_schema_registry-client
 
+## v0.6.0
+- Update `avro_turf` dependency to >= 1.20.1
+- Remove `sinatra` development dependency (no longer needed as `avro_turf` 1.20.1+ uses a custom Rack-based implementation)
+
 ## v0.5.0
 - Require Ruby 2.7+
 
