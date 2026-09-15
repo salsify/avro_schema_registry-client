@@ -1,5 +1,10 @@
 # avro_schema_registry-client
 
+## v0.6.1
+- Reset the Excon connection when a non-`StandardError` exception interrupts a
+  registry request, so that a partially read socket is not reused by the next
+  request on the same thread.
+
 ## v0.6.0
 - Update `avro_turf` dependency to >= 1.20.1
 - Remove `sinatra` development dependency (no longer needed as `avro_turf` 1.20.1+ uses a custom Rack-based implementation)

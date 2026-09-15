@@ -43,5 +43,24 @@ module AvroSchemaRegistry
                   body: { schema: schema.to_s }.merge!(params).to_json)
       data.fetch('is_compatible', false) unless data.key?('error_code')
     end
+
+    private
+
+    # Excon caches a socket per thread and only resets the connection when a
+    # StandardError escapes a request, so a non-StandardError interrupt --
+    # Rack::Timeout::RequestTimeoutException subclasses Exception and arrives
+    # via Thread#raise -- leaves a partially read socket in that cache. The next
+    # request on the thread then reads the previous response and returns another
+    # subject's schema id. `rescue` rather than `ensure` so that only an
+    # abnormal, non-StandardError exit resets, leaving the paths Excon already
+    # handles (including a completed response with an unexpected status)
+    # untouched. A bare re-raise preserves the original exception and backtrace,
+    # so a request timeout still terminates the request.
+    def request(path, **options)
+      super
+    rescue Exception => e # rubocop:disable Lint/RescueException
+      @connection.reset unless e.is_a?(StandardError)
+      raise
+    end
   end
 end
